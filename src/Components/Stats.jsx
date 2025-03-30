@@ -1,57 +1,37 @@
-import React, { useMemo } from "react";
-import data from "../data/data.json";
-
+import { useContext } from "react";
 import { HiOutlineLink } from "react-icons/hi2";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { RiUserFollowFill } from "react-icons/ri";
 import { RiUserForbidFill } from "react-icons/ri";
 import { RiUserUnfollowFill } from "react-icons/ri";
+import Context from "../Context/Context";
 
 const Stats = () => {
-  let totalUsers = useMemo(() => {
-    return data.length;
-  }, [data]);
-
-  let activeUsers = useMemo(() => {
-    return data.filter((user) => user?.about?.status === "ACTIVE").length;
-  }, [data]);
-
-  let inactiveUsers = useMemo(() => {
-    return (
-      data.filter((user) => user?.about?.status === "INVITED").length /
-      totalUsers
-    );
-  }, [data]);
-
-  let blockedUsers = useMemo(() => {
-    return (
-      data.filter((user) => user?.about?.status === "BLOCKED").length /
-      totalUsers
-    );
-  }, [data]);
+  let { getInsights } = useContext(Context);
+  let insights = getInsights();
 
   const statsData = [
     {
       text: "Total Users",
-      value: totalUsers,
+      value: insights.totalUsers,
       icon: <HiMiniUserGroup className="statsIconStyle" />,
       link: "https://example.com",
     },
     {
       text: "Active Users",
-      value: activeUsers,
+      value: insights.activeUsers,
       icon: <RiUserFollowFill className="statsIconStyle" />,
       link: "https://example.com",
     },
     {
       text: "Inactive Users",
-      value: inactiveUsers * 100 + "%",
+      value: Math.round(insights.inactiveUsers * 100) + "%",
       icon: <RiUserUnfollowFill className="statsIconStyle" />,
       link: "https://example.com",
     },
     {
       text: "Blocked Users",
-      value: blockedUsers * 100 + "%",
+      value: Math.round(insights.blockedUsers * 100) + "%",
       icon: <RiUserForbidFill className="statsIconStyle" />,
     },
   ];

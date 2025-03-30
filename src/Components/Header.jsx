@@ -1,4 +1,6 @@
 import React from "react";
+import { CSVLink } from "react-csv";
+import data from "../data/data.json";
 
 const Header = () => {
   return (
@@ -11,7 +13,9 @@ const Header = () => {
         </p>
       </div>
       <button className="bg-gray-800 px-5 py-1.5 text-gray-100 rounded-md">
-        Download Report
+        <CSVLink data={data} filename="users-data">
+          Download Report
+        </CSVLink>
       </button>
     </div>
   );

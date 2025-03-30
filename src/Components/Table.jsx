@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Context from "../Context/Context";
 import UserBlock from "./UserBlock";
+import Pagination from "./Pagination";
 
 const Table = () => {
   let tableRef = useRef();
   const [tempData, setTempData] = useState([]);
-  const { getData } = useContext(Context);
+  const { getData, page } = useContext(Context);
 
   useEffect(() => {
-    setTempData(getData(0, 5));
+    let startVal = (page - 1) * 10;
+    setTempData(getData(startVal, startVal + 5));
 
     const ref = tableRef.current;
     ref.addEventListener("scroll", handleScroll);
@@ -16,16 +18,17 @@ const Table = () => {
     return () => {
       ref.removeEventListener("scroll", handleScroll);
     };
-  }, [getData]);
+  }, [getData, page]);
 
   const handleScroll = () => {
+    let startVal = (page - 1) * 10;
     const { scrollTop, scrollHeight, clientHeight } = tableRef.current;
 
     if (
       scrollTop + clientHeight >= scrollHeight - 5 &&
       tempData?.length !== 10
     ) {
-      setTempData(getData(0, 10));
+      setTempData(getData(startVal, startVal + 10));
     }
   };
 
@@ -62,6 +65,7 @@ const Table = () => {
           })}
         </div>
       </div>
+      <Pagination />
     </div>
   );
 };

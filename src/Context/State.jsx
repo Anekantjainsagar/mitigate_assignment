@@ -7,6 +7,9 @@ const State = (props) => {
   const [searchText, setSearchText] = useState("");
   const [statusValue, setStatusValue] = useState("");
   const [dateRange, setDateRange] = useState("");
+  const [page, setPage] = useState(1);
+  const [updatedStatus, setUpdatedStatus] = useState("");
+  const [updatedStatusId, setUpdatedStatusId] = useState("");
 
   useEffect(() => {
     let filteredData = data;
@@ -34,8 +37,37 @@ const State = (props) => {
       });
     }
 
+    if (updatedStatusId && updatedStatus) {
+      filteredData = filteredData.map((user) => {
+        if (user.id === updatedStatusId) {
+          user.about.status = updatedStatus;
+          setUpdatedStatus("");
+          setUpdatedStatusId("");
+        }
+      });
+    }
+
     setUserData(filteredData);
-  }, [searchText, statusValue, dateRange]);
+    setPage(1);
+  }, [searchText, statusValue, dateRange, updatedStatusId]);
+
+  useEffect(() => {
+    getInsights();
+  }, [updatedStatusId]);
+
+  const getInsights = () => {
+    return {
+      totalUsers: data.length,
+      activeUsers: data.filter((user) => user?.about?.status === "ACTIVE")
+        .length,
+      inactiveUsers:
+        data.filter((user) => user?.about?.status === "INVITED").length /
+        data.length,
+      blockedUsers:
+        data.filter((user) => user?.about?.status === "BLOCKED").length /
+        data.length,
+    };
+  };
 
   const getData = (start = 0, end) => {
     return userData?.slice(start, end);
@@ -51,6 +83,14 @@ const State = (props) => {
         setStatusValue,
         dateRange,
         setDateRange,
+        page,
+        setPage,
+        updatedStatus,
+        updatedStatusId,
+        setUpdatedStatus,
+        setUpdatedStatusId,
+        getInsights,
+        userData,
       }}
     >
       {props.children}

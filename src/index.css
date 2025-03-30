@@ -18,6 +18,10 @@
   @apply text-blue-500 bg-blue-500/10 font-semibold border-2 border-blue-500 w-[7vw] py-1.5 rounded-lg;
 }
 
+.pagination-arrow {
+  @apply p-1.5 text-4xl bg-white rounded-full cursor-pointer;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
